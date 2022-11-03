@@ -82,7 +82,7 @@ def change_arena_skin(client_info: tuple) -> bool:
 def get_client() -> tuple:
     """Gets data about the client such as port and auth token"""
     print("\n\n[Auto Queue]")
-    file_path = settings.LEAGUE_CLIENT_PATH + "\\lockfile"
+    file_path = settings.LEAGUE_CLIENT_PATH + "lockfile"
     got_lock_file = False
     while not got_lock_file:
         try:

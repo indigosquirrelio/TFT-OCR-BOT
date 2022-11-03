@@ -5,7 +5,7 @@ Handles tasks that happen each game round
 from time import sleep, perf_counter
 import random
 import multiprocessing
-import win32gui
+import Quartz
 import settings
 import game_assets
 import game_functions
@@ -28,17 +28,20 @@ class Game:
         print("\n[!] Searching for game window")
         while not self.found_window:
             print("  Did not find window, trying again...")
-            win32gui.EnumWindows(self.callback, None)
+            windows = Quartz.CGWindowListCopyWindowInfo(
+                Quartz.kCGWindowListOptionOnScreenOnly | Quartz.kCGWindowListExcludeDesktopElements,
+                Quartz.kCGNullWindowID)
+            for window in windows:
+                
+                print(window)
             sleep(1)
 
         self.loading_screen()
 
     def callback(self, hwnd, extra) -> None: # pylint: disable=unused-argument
         """Function used to find the game window and get its size"""
-        if "League of Legends (TM) Client" not in win32gui.GetWindowText(hwnd):
-            return
 
-        rect = win32gui.GetWindowRect(hwnd)
+        rect = [[1,1,1,1]]
 
         x_pos = rect[0]
         y_pos = rect[1]
@@ -48,7 +51,6 @@ class Game:
         if width < 200 or height < 200:
             return
 
-        print(f"  Window {win32gui.GetWindowText(hwnd)} found")
         print(f"    Location: ({x_pos}, {y_pos})")
         print(f"    Size:     ({width}, {height})")
         Vec4.setup_screen(x_pos, y_pos, width, height)
